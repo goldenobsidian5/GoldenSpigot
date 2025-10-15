@@ -37,11 +37,11 @@ See our API patches [here](./patches/dashspigot/api/).
 ```kotlin
 repositories {
     mavenCentral()
-    maven(url = "https://repo.hpfxd.com/releases/")
+    maven(url = "https://jenkins.dashnetwork.xyz/plugin/repository/project/DashSpigot/LastSuccessful/repository/")
 }
 
 dependencies {
-    compileOnly("com.hpfxd.pandaspigot:pandaspigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("xyz.dashnetwork.dashspigot:dashspigot-api:1.8.8-R0.1-SNAPSHOT")
 }
 ```
 </details>

@@ -1,0 +1,28 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MasterDash5 <constant4337@molecularmail.com>
+Date: Wed, 15 Oct 2025 11:31:24 -0600
+Subject: [PATCH] Fix MC-120567
+
+
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 547e76a6074202da4637d5c80774d5f5628c6bbc..3ab0a75688cc5a5f5e93adde5b0bbce1158bc2c1 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -314,14 +314,14 @@ public class WorldServer extends World implements IAsyncTaskHandler {
+ 
+     protected void e() {
+         this.O = false;
+-        Iterator iterator = this.players.iterator();
++        Iterator iterator = this.players.stream().filter(EntityHuman::isSleeping).iterator(); // DashSpigot - Fix MC-120567
+ 
+         while (iterator.hasNext()) {
+             EntityHuman entityhuman = (EntityHuman) iterator.next();
+ 
+-            if (entityhuman.isSleeping()) {
++            //if (entityhuman.isSleeping()) { // DashSpigot - Fix MC-120567
+                 entityhuman.a(false, false, true);
+-            }
++            //} // DashSpigot - Fix MC-120567
+         }
+ 
+         this.ag();

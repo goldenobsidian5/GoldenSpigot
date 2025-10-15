@@ -1,0 +1,31 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MasterDash5 <constant4337@molecularmail.com>
+Date: Wed, 15 Oct 2025 11:00:58 -0600
+Subject: [PATCH] Increase chat limit to 256
+
+
+diff --git a/src/main/java/net/minecraft/server/PacketPlayInChat.java b/src/main/java/net/minecraft/server/PacketPlayInChat.java
+index 18358b4324a7da15d932c11f19d657345da619af..14d4b0563679174818ef22c211606d034edfa612 100644
+--- a/src/main/java/net/minecraft/server/PacketPlayInChat.java
++++ b/src/main/java/net/minecraft/server/PacketPlayInChat.java
+@@ -9,15 +9,17 @@ public class PacketPlayInChat implements Packet<PacketListenerPlayIn> {
+     public PacketPlayInChat() {}
+ 
+     public PacketPlayInChat(String s) {
+-        if (s.length() > 100) {
+-            s = s.substring(0, 100);
++        // DashSpigot start - Increase chat limit to 256
++        if (s.length() > 256) {
++            s = s.substring(0, 256);
++        // DashSpigot end
+         }
+ 
+         this.a = s;
+     }
+ 
+     public void a(PacketDataSerializer packetdataserializer) throws IOException {
+-        this.a = packetdataserializer.c(100);
++        this.a = packetdataserializer.c(256); // DashSpigot - Increase chat limit to 256
+     }
+ 
+     public void b(PacketDataSerializer packetdataserializer) throws IOException {

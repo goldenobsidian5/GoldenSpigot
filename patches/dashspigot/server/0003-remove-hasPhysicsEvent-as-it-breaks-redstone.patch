@@ -1,0 +1,75 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MasterDash5 <constant4337@molecularmail.com>
+Date: Wed, 15 Oct 2025 11:13:23 -0600
+Subject: [PATCH] remove hasPhysicsEvent as it breaks redstone
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockPlant.java b/src/main/java/net/minecraft/server/BlockPlant.java
+index 558ab56e5f2e670dc17e8ffd39d8f09d6d2cd12e..76352fee00484ea963e2f97ac081739199d3a2a8 100644
+--- a/src/main/java/net/minecraft/server/BlockPlant.java
++++ b/src/main/java/net/minecraft/server/BlockPlant.java
+@@ -44,7 +44,7 @@ public class BlockPlant extends Block {
+ 
+     protected void e(World world, BlockPosition blockposition, IBlockData iblockdata) {
+         if (!this.f(world, blockposition, iblockdata)) {
+-            if (((WorldServer) world).hasPhysicsEvent) { // PandaSpigot - hasPhysicsEvent
++            //if (((WorldServer) world).hasPhysicsEvent) { // PandaSpigot - hasPhysicsEvent // DashSpigot - Remove hasPhysicsEvent
+             // CraftBukkit Start
+             org.bukkit.block.Block block = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
+             BlockPhysicsEvent event = new BlockPhysicsEvent(block, block.getTypeId());
+@@ -53,7 +53,7 @@ public class BlockPlant extends Block {
+             if (event.isCancelled()) {
+                 return;
+             }
+-            }
++            //}
+             // CraftBukkit end
+             this.b(world, blockposition, iblockdata, 0);
+             world.setTypeAndData(blockposition, Blocks.AIR.getBlockData(), 3);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index be99c5e50e79d3f985911fb9e95e7120c2e5b442..ddcc0773984ec49d0c6283f1f838db32a843e0d6 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -875,7 +875,7 @@ public abstract class MinecraftServer implements Runnable, ICommandListener, IAs
+             // if (i == 0 || this.getAllowNether()) {
+                 WorldServer worldserver = this.worlds.get(i);
+                 worldserver.hasEntityMoveEvent = io.papermc.paper.event.entity.EntityMoveEvent.getHandlerList().getRegisteredListeners().length > 0; // PandaSpigot
+-                worldserver.hasPhysicsEvent = org.bukkit.event.block.BlockPhysicsEvent.getHandlerList().getRegisteredListeners().length > 0; // PandaSpigot
++                //worldserver.hasPhysicsEvent = org.bukkit.event.block.BlockPhysicsEvent.getHandlerList().getRegisteredListeners().length > 0; // PandaSpigot // DashSpigot - remove hasPhysicsEvent
+ 
+                 this.methodProfiler.a(worldserver.getWorldData().getName());
+                 /* Drop global time updates
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index fe9b4ea7584587c4a4d198e01fc21838ec59f471..76209406951365452b6614680e0b82d7fc017719 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -598,14 +598,14 @@ public abstract class World implements IBlockAccess {
+             try {
+                 // CraftBukkit start
+                 CraftWorld world = ((WorldServer) this).getWorld();
+-                if (world != null && ((WorldServer) this).hasPhysicsEvent) { // PandaSpigot - hasPhysicsEvent
++                //if (world != null && ((WorldServer) this).hasPhysicsEvent) { // PandaSpigot - hasPhysicsEvent // DashSpigot - remove hasPhysicsEvent
+                     BlockPhysicsEvent event = new BlockPhysicsEvent(world.getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ()), CraftMagicNumbers.getId(block));
+                     this.getServer().getPluginManager().callEvent(event);
+ 
+                     if (event.isCancelled()) {
+                         return;
+                     }
+-                }
++                //} // DashSpigot - remove hasPhysicsEvent
+                 // CraftBukkit end
+                 iblockdata.getBlock().doPhysics(this, blockposition, iblockdata, block);
+             } catch (StackOverflowError stackoverflowerror) { // Spigot Start
+diff --git a/src/main/java/net/minecraft/server/WorldServer.java b/src/main/java/net/minecraft/server/WorldServer.java
+index 99eb33eef6e11f76385afd536a921e5cffa21cb8..547e76a6074202da4637d5c80774d5f5628c6bbc 100644
+--- a/src/main/java/net/minecraft/server/WorldServer.java
++++ b/src/main/java/net/minecraft/server/WorldServer.java
+@@ -50,7 +50,7 @@ public class WorldServer extends World implements IAsyncTaskHandler {
+     private static final List<StructurePieceTreasure> U = Lists.newArrayList(new StructurePieceTreasure[] { new StructurePieceTreasure(Items.STICK, 0, 1, 3, 10), new StructurePieceTreasure(Item.getItemOf(Blocks.PLANKS), 0, 1, 3, 10), new StructurePieceTreasure(Item.getItemOf(Blocks.LOG), 0, 1, 3, 10), new StructurePieceTreasure(Items.STONE_AXE, 0, 1, 1, 3), new StructurePieceTreasure(Items.WOODEN_AXE, 0, 1, 1, 5), new StructurePieceTreasure(Items.STONE_PICKAXE, 0, 1, 1, 3), new StructurePieceTreasure(Items.WOODEN_PICKAXE, 0, 1, 1, 5), new StructurePieceTreasure(Items.APPLE, 0, 2, 3, 5), new StructurePieceTreasure(Items.BREAD, 0, 2, 3, 3), new StructurePieceTreasure(Item.getItemOf(Blocks.LOG2), 0, 1, 3, 10)});
+     private List<NextTickListEntry> V = Lists.newArrayList();
+     public boolean hasEntityMoveEvent = false; // PandaSpigot
+-    public boolean hasPhysicsEvent = true; // PandaSpigot
++    //public boolean hasPhysicsEvent = true; // PandaSpigot // DashSpigot - remove hasPhysicsEvent
+ 
+     // CraftBukkit start
+     public final int dimension;

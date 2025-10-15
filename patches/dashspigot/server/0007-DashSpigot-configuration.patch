@@ -1,0 +1,190 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MasterDash5 <constant4337@molecularmail.com>
+Date: Wed, 15 Oct 2025 12:50:52 -0600
+Subject: [PATCH] DashSpigot configuration
+
+
+diff --git a/src/main/java/net/minecraft/server/DedicatedServer.java b/src/main/java/net/minecraft/server/DedicatedServer.java
+index 8a302b2678916f862cac0c020fa3247043204e6a..700bc00bb70791ebc9c0212cae3b413aca053454 100644
+--- a/src/main/java/net/minecraft/server/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/DedicatedServer.java
+@@ -209,6 +209,7 @@ public class DedicatedServer extends MinecraftServer implements IMinecraftServer
+             }
+             bindAddress = new java.net.InetSocketAddress(inetaddress, this.R());
+             }
++            xyz.dashnetwork.dashspigot.config.DashSpigotConfig.init((File) options.valueOf("dash-settings")); // DashSpigot
+             com.hpfxd.pandaspigot.config.PandaSpigotConfig.init((File) options.valueOf("pandaspigot-settings"));
+             // PandaSpigot end
+             // PaperSpigot start
+diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
+index 76209406951365452b6614680e0b82d7fc017719..768a4398c926cc378284bb14b7c175be4a056223 100644
+--- a/src/main/java/net/minecraft/server/World.java
++++ b/src/main/java/net/minecraft/server/World.java
+@@ -169,6 +169,8 @@ public abstract class World implements IBlockAccess {
+ 
+     public com.hpfxd.pandaspigot.config.PandaSpigotWorldConfig pandaSpigotConfig; // PandaSpigot
+ 
++    public xyz.dashnetwork.dashspigot.config.DashSpigotWorldConfig dashSpigotConfig; // DashSpigot
++
+     public final co.aikar.timings.WorldTimingsHandler timings; // Spigot
+ 
+     public CraftWorld getWorld() {
+@@ -193,6 +195,7 @@ public abstract class World implements IBlockAccess {
+         this.spigotConfig = new org.spigotmc.SpigotWorldConfig( worlddata.getName() ); // Spigot
+         this.paperSpigotConfig = new org.github.paperspigot.PaperSpigotWorldConfig( worlddata.getName() ); // PaperSpigot
+         this.pandaSpigotConfig = com.hpfxd.pandaspigot.config.PandaSpigotConfig.getWorldConfig(worlddata.getName()); // PandaSpigot
++        this.dashSpigotConfig = xyz.dashnetwork.dashspigot.config.DashSpigotConfig.getWorldConfig(worlddata.getName()); // DashSpigot
+         this.generator = gen;
+         this.world = new CraftWorld((WorldServer) this, gen, env);
+         this.ticksPerAnimalSpawns = this.getServer().getTicksPerAnimalSpawns(); // CraftBukkit
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index beaa7783a5c979437eefd96d0b5ec655955d74da..b137b4988a10e5e8277ec4cabf3ae889b0187fd4 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -749,6 +749,7 @@ public final class CraftServer implements Server {
+         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
+         org.github.paperspigot.PaperSpigotConfig.init((File) console.options.valueOf("paper-settings")); // PaperSpigot
+         com.hpfxd.pandaspigot.config.PandaSpigotConfig.init((File) console.options.valueOf("pandaspigot-settings")); // PandaSpigot
++        xyz.dashnetwork.dashspigot.config.DashSpigotConfig.init((File) console.options.valueOf("dash-settings")); // DashSpigot
+         for (WorldServer world : console.worlds) {
+             world.worldData.setDifficulty(difficulty);
+             world.setSpawnFlags(monsters, animals);
+@@ -766,6 +767,7 @@ public final class CraftServer implements Server {
+             world.spigotConfig.init(); // Spigot
+             world.paperSpigotConfig.init(); // PaperSpigot
+             world.pandaSpigotConfig = com.hpfxd.pandaspigot.config.PandaSpigotConfig.getWorldConfig(world); // PandaSpigot
++            world.dashSpigotConfig = xyz.dashnetwork.dashspigot.config.DashSpigotConfig.getWorldConfig(world); // DashSpigot
+         }
+ 
+         pluginManager.clearPlugins();
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index d8d19207e4db256befa886bc9638759ed7c926dc..c0a409b43bbb0b7fe43435b041ee7042716e70d2 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -145,6 +145,14 @@ public class Main {
+                     .ofType(File.class)
+                     .describedAs("Jar file");
+                 // PandaSpigot end
++
++                // DashSpigot start
++                acceptsAll(asList("dash-settings"), "File for DashSpigot settings")
++                    .withRequiredArg()
++                    .ofType(File.class)
++                    .defaultsTo(new File("dash.yml"))
++                    .describedAs("Yml file");
++                // DashSpigot end
+             }
+         };
+ 
+diff --git a/src/main/java/xyz/dashnetwork/dashspigot/config/DashSpigotConfig.java b/src/main/java/xyz/dashnetwork/dashspigot/config/DashSpigotConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c17d6122135dc18e2e1e1368dab4681dade55024
+--- /dev/null
++++ b/src/main/java/xyz/dashnetwork/dashspigot/config/DashSpigotConfig.java
+@@ -0,0 +1,90 @@
++package xyz.dashnetwork.dashspigot.config;
++
++import com.google.common.base.Throwables;
++import com.hpfxd.configurate.eoyaml.EOYamlConfigurationLoader;
++import net.minecraft.server.World;
++import org.spongepowered.configurate.CommentedConfigurationNode;
++import org.spongepowered.configurate.ConfigurationNode;
++import org.spongepowered.configurate.objectmapping.ConfigSerializable;
++import org.spongepowered.configurate.objectmapping.meta.Comment;
++import org.spongepowered.configurate.util.MapFactories;
++
++import java.io.File;
++import java.util.HashMap;
++import java.util.Map;
++
++@ConfigSerializable
++@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
++public class DashSpigotConfig {
++
++    private static DashSpigotConfig config;
++    private static DashSpigotWorldConfig defaultWorldConfig;
++    private static final Map<String, DashSpigotWorldConfig> worldConfigs = new HashMap<>();
++
++    /**
++     * Initialize the configuration, and load it from a file.
++     * <p>
++     * This is called once on server startup, and every reload.
++     *
++     * @param file The configuration file.
++     */
++    public static void init(File file) {
++        EOYamlConfigurationLoader loader = EOYamlConfigurationLoader.builder()
++            .file(file)
++            .defaultOptions(o -> o
++                .header("This is the configuration file for DashSpigot.")
++                .mapFactory(MapFactories.insertionOrdered()))
++            .build();
++
++        try {
++            CommentedConfigurationNode root = loader.load();
++            config = root.get(DashSpigotConfig.class);
++
++            // worlds
++            CommentedConfigurationNode worldsNode = root.node("worlds")
++                .comment("The worlds section is for settings which can be configured per-world.\n" +
++                    "\n" +
++                    "Any settings in the \"default\" world will provide default values for\n" +
++                    "other worlds which don't explicitly specify settings.\n" +
++                    "\n" +
++                    "To specify settings for a specific world, just add a new section with the world's name.");
++            ConfigurationNode defaultWorldNode = worldsNode.node("default");
++            defaultWorldConfig = defaultWorldNode.get(DashSpigotWorldConfig.class);
++            defaultWorldNode.set(defaultWorldConfig); // populate default in config
++
++            root.set(config); // update backing node
++            loader.save(root);
++
++            // call after save
++            initWorlds(worldsNode);
++        } catch (Exception e) {
++            throw Throwables.propagate(e);
++        }
++    }
++
++    private static void initWorlds(ConfigurationNode node) throws Exception {
++        worldConfigs.clear();
++        for (Map.Entry<Object, ? extends ConfigurationNode> entry : node.childrenMap().entrySet()) {
++            Object worldName = entry.getKey();
++            if (worldName.equals("default")) continue; // skip "default"
++            ConfigurationNode worldNode = entry.getValue();
++
++            DashSpigotWorldConfig worldConfig = worldNode.get(DashSpigotWorldConfig.class);
++
++            worldConfigs.put(worldName.toString(), worldConfig);
++        }
++    }
++
++    public static DashSpigotWorldConfig getWorldConfig(String worldName) {
++        return worldConfigs.getOrDefault(worldName, defaultWorldConfig);
++    }
++
++    public static DashSpigotWorldConfig getWorldConfig(World world) {
++        return getWorldConfig(world.worldData.getName());
++    }
++
++    public static DashSpigotConfig get() {
++        return config;
++    }
++
++}
+diff --git a/src/main/java/xyz/dashnetwork/dashspigot/config/DashSpigotWorldConfig.java b/src/main/java/xyz/dashnetwork/dashspigot/config/DashSpigotWorldConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..d2a6d10dd7be7151a69c9c7ec76f98a5a40a58b6
+--- /dev/null
++++ b/src/main/java/xyz/dashnetwork/dashspigot/config/DashSpigotWorldConfig.java
+@@ -0,0 +1,10 @@
++package xyz.dashnetwork.dashspigot.config;
++
++import org.spongepowered.configurate.objectmapping.ConfigSerializable;
++import org.spongepowered.configurate.objectmapping.meta.Comment;
++
++@ConfigSerializable
++@SuppressWarnings({"FieldCanBeLocal", "FieldMayBeFinal"})
++public class DashSpigotWorldConfig {
++
++}

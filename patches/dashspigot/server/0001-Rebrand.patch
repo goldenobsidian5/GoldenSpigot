@@ -5,7 +5,7 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 8c8aa2274fd97c9d3a2f24700f58e045e984f75d..03d5fe9c2da0019aedbeb1663f79169967354ec9 100644
+index 8c8aa2274fd97c9d3a2f24700f58e045e984f75d..ddb2407230dd52f3750e94e0edc663f29c055621 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -11,7 +11,7 @@ repositories {
@@ -26,6 +26,15 @@ index 8c8aa2274fd97c9d3a2f24700f58e045e984f75d..03d5fe9c2da0019aedbeb1663f791699
      standardInput = System.`in`
      workingDir = rootProject.layout.projectDirectory.dir(
          providers.gradleProperty("runWorkDir").orElse("run")
+@@ -110,7 +110,7 @@ tasks {
+             attributes(
+                 "Main-Class" to "org.bukkit.craftbukkit.Main",
+                 "Implementation-Title" to "CraftBukkit",
+-                "Implementation-Version" to "git-PandaSpigot-$implementationVersion",
++                "Implementation-Version" to "git-DashSpigot-$implementationVersion", // DashSpigot
+                 "Implementation-Vendor" to date,
+                 "Specification-Title" to "Bukkit",
+                 "Specification-Version" to project.version,
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
 index 59464fbb8c611208197d1a4949eed660270311f1..be99c5e50e79d3f985911fb9e95e7120c2e5b442 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java

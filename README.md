@@ -8,43 +8,7 @@ You can download the latest pre-built server JAR by clicking the download button
 [![Download](https://custom-icon-badges.demolab.com/badge/-Download-blue?style=for-the-badge&logo=download&logoColor=white)](https://jenkins.dashnetwork.xyz/job/DashSpigot/lastSuccessfulBuild/artifact/paperclip.jar)
 
 ## API 
-See our API patches [here](./patches/dashspigot/api/).  
-<details>
-<summary>Maven</summary>
-
-```xml
-<repositories>
-    <repository>
-        <id>dashspigot-repo</id>
-        <url>https://jenkins.dashnetwork.xyz/plugin/repository/project/DashSpigot/LastSuccessful/repository/</url>
-    </repository>
-</repositories>
-
-<dependencies>
-    <dependency>
-        <groupId>xyz.dashnetwork.dashspigot</groupId>
-        <artifactId>dashspigot-api</artifactId>
-        <version>1.8.8-R0.1-SNAPSHOT</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
-```
-</details>
-
-<details>
-<summary>Gradle (kts)</summary>
-
-```kotlin
-repositories {
-    mavenCentral()
-    maven(url = "https://jenkins.dashnetwork.xyz/plugin/repository/project/DashSpigot/LastSuccessful/repository/")
-}
-
-dependencies {
-    compileOnly("xyz.dashnetwork.dashspigot:dashspigot-api:1.8.8-R0.1-SNAPSHOT")
-}
-```
-</details>
+See our API patches [here](./patches/dashspigot/api/).
 
 ## Building
 To compile PandaSpigot, you'll need:

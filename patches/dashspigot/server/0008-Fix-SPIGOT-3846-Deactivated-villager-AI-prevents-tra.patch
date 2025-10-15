@@ -44,7 +44,7 @@ index d2a6d10dd7be7151a69c9c7ec76f98a5a40a58b6..45d6cd4e98c6855f2a0677b579ee7ecd
 +    @Comment("Toggles whether or not villagers should be \"activated\" even if they are\n" +
 +        "outside of the activation range.\n" +
 +        "\n" +
-+        "Disabling this means villager will not work as they do in Vanilla and players\n" +
++        "Disabling this means villagers will not work as they do in Vanilla and players\n" +
 +        "have to stay near the village for a while for the villager trades to restock.")
 +    public boolean tickInactiveVillagers = true;
 +

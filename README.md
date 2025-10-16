@@ -1,4 +1,4 @@
-# DashSpigot [![Build](https://img.shields.io/github/actions/workflow/status/dashnetworkxyz/DashSpigot/build.yml?branch=master&label=Build)](https://github.com/dashnetworkxyz/DashSpigot/actions/workflows/build.yml)
+# DashSpigot [![Build](https://jenkins.dashnetwork.xyz/job/DashSpigot/badge/icon)](https://jenkins.dashnetwork.xyz/job/DashSpigot/)
 Fork of [PandaSpigot](https://github.com/hpfxd/PandaSpigot) 1.8.8 focused on bug fixes and API backports.
 
 See a full list of patches [here](./patches/dashspigot/).

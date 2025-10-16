@@ -1,9 +1,20 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: MasterDash5 <constant4337@molecularmail.com>
-Date: Wed, 15 Oct 2025 10:42:15 -0600
-Subject: [PATCH] Update version command
+Date: Thu, 16 Oct 2025 14:50:16 -0600
+Subject: [PATCH] Rebrand
 
 
+diff --git a/build.gradle.kts b/build.gradle.kts
+index 796ce5db547d90f9e348b46d188823351cfa15e0..7d18c765abed262bddac6e8e90786320c8a39ea6 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -1,5 +1,5 @@
+ plugins {
+-    id("pandaspigot.conventions")
++    id("dashspigot.conventions")
+     `maven-publish`
+ }
+ 
 diff --git a/src/main/java/org/bukkit/command/defaults/VersionCommand.java b/src/main/java/org/bukkit/command/defaults/VersionCommand.java
 index 04195613b2c230aa5e28fb2fabc2b3f2b32ec169..f88ecf6a3ab4f8466be8589b2b0002fe124897d9 100644
 --- a/src/main/java/org/bukkit/command/defaults/VersionCommand.java

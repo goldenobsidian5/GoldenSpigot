@@ -5,9 +5,16 @@ Subject: [PATCH] Rebrand
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index 8c8aa2274fd97c9d3a2f24700f58e045e984f75d..ddb2407230dd52f3750e94e0edc663f29c055621 100644
+index 8c8aa2274fd97c9d3a2f24700f58e045e984f75d..d2fe82294ccc4cf25a0e1745c9c12e542a014a87 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
+@@ -1,5 +1,5 @@
+ plugins {
+-    id("pandaspigot.conventions")
++    id("dashspigot.conventions")
+     id("com.gradleup.shadow") version "9.0.0-beta7"
+ }
+ 
 @@ -11,7 +11,7 @@ repositories {
  }
  
@@ -61,6 +68,19 @@ index 2eac381a825ed0edabd12816432f6d2d655887ef..beaa7783a5c979437eefd96d0b5ec655
      private final String serverVersion;
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index da66025a18b23e249ce13a8b998d24b112cb969e..ecc9fd2f9119e161ec1722bb88b4bd651830d550 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/com.hpfxd.pandaspigot/pandaspigot-api/pom.properties");
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/xyz.dashnetwork.dashspigot/dashspigot-api/pom.properties"); // DashSpigot
+         Properties properties = new Properties();
+ 
+         if (stream != null) {
 diff --git a/src/main/java/org/spigotmc/WatchdogThread.java b/src/main/java/org/spigotmc/WatchdogThread.java
 index 879e29592d9f6c4be7bd5d5dfbf83be1eb732799..c51efadbdf14235ea93c1bd5f45be509cb2f0bbf 100644
 --- a/src/main/java/org/spigotmc/WatchdogThread.java

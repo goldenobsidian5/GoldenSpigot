@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MasterDash5 <constant4337@molecularmail.com>
+Date: Thu, 16 Oct 2025 16:01:08 -0600
+Subject: [PATCH] Fix MC-94186: Dragon egg falling in lazy chunks
+
+
+diff --git a/src/main/java/net/minecraft/server/BlockDragonEgg.java b/src/main/java/net/minecraft/server/BlockDragonEgg.java
+index 76a627246261712a105ee9fee3005eb02eab802c..53f5ca5108c71197984e73a81d05e5ad9ee42995 100644
+--- a/src/main/java/net/minecraft/server/BlockDragonEgg.java
++++ b/src/main/java/net/minecraft/server/BlockDragonEgg.java
+@@ -42,7 +42,7 @@ public class BlockDragonEgg extends Block {
+                 }
+ 
+                 if (blockposition1.getY() > 0) {
+-                    world.setTypeAndData(blockposition1, this.getBlockData(), 2);
++                    world.setTypeAndData(blockposition1.up(), this.getBlockData(), 2); // DashSpigot - Fix MC-94186: Dragon egg falling in lazy chunks
+                 }
+             }
+ 

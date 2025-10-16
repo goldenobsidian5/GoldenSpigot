@@ -1,5 +1,5 @@
 plugins {
-    id("pandaspigot.conventions")
+    id("dashspigot.conventions")
     id("paperclip")
     id("com.gradleup.shadow") version "9.0.0-beta7"
 }

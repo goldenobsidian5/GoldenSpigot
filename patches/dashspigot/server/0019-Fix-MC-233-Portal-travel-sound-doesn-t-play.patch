@@ -1,0 +1,22 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: MasterDash5 <constant4337@molecularmail.com>
+Date: Mon, 20 Oct 2025 13:04:50 -0600
+Subject: [PATCH] Fix MC-233: Portal travel sound doesn't play
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
+index c4c5b16c42719c802c928c871858f2c99021c9db..a82a78278b16088caa7e33449035e4023bfd92b7 100644
+--- a/src/main/java/net/minecraft/server/PlayerList.java
++++ b/src/main/java/net/minecraft/server/PlayerList.java
+@@ -719,6 +719,11 @@ public abstract class PlayerList {
+         exitWorld.chunkProviderServer.forceChunkLoad = before;
+ 
+         this.moveToWorld(entityplayer, exitWorld.dimension, true, exit, false); // Vanilla doesn't check for suffocation when handling portals, so neither should we
++        // DashSpigot start - Fix MC-233: Portal travel sound doesn't play
++        if (cause == TeleportCause.NETHER_PORTAL) {
++            entityplayer.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect("portal.travel", entityplayer.locX, entityplayer.locY, entityplayer.locZ, 0.25F, entityplayer.random.nextFloat() * 0.4F + 0.8F));
++        }
++        // DashSpigot end
+         if (entityplayer.motX != velocity.getX() || entityplayer.motY != velocity.getY() || entityplayer.motZ != velocity.getZ()) {
+             entityplayer.getBukkitEntity().setVelocity(velocity);
+         }

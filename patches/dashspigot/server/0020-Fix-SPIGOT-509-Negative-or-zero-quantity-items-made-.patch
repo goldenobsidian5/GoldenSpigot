@@ -6,15 +6,20 @@ Subject: [PATCH] Fix SPIGOT-509: Negative or zero quantity items made when
 
 
 diff --git a/src/main/java/net/minecraft/server/Container.java b/src/main/java/net/minecraft/server/Container.java
-index 7fc495792c1caf81511d8197b05e2d0b5ddb71b7..07c8489f75f0f55bd2d33bb2b2dd1b2e896c023d 100644
+index 7fc495792c1caf81511d8197b05e2d0b5ddb71b7..3030f4632b301652d3278ab2fbe0d8d00dd47e8b 100644
 --- a/src/main/java/net/minecraft/server/Container.java
 +++ b/src/main/java/net/minecraft/server/Container.java
-@@ -166,7 +166,7 @@ public abstract class Container {
+@@ -166,7 +166,12 @@ public abstract class Container {
                                  itemstack2.count = slot1.getMaxStackSize(itemstack2);
                              }
  
 -                            l -= itemstack2.count - j1;
-+                            if (dragType != 2) l -= itemstack2.count - j1; // DashSpigot
++                            // DashSpigot start
++                            if (dragType != 2 || !(entityhuman instanceof EntityPlayer && ((EntityPlayer) entityhuman).playerInteractManager.getGameMode().d())) { // DashSpigot
++                                l -= itemstack2.count - j1;
++                            }
++                            // DashSpigot end
++
                              // slot1.set(itemstack2);
                              draggedSlots.put(slot1.rawSlotIndex, itemstack2); // CraftBukkit - Put in map instead of setting
                          }

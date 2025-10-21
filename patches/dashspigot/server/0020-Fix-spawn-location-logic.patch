@@ -66,7 +66,7 @@ index d981c89fd182bae75c928616edc5944f6ee860f8..1fc6a652ae5c53594f1528b9860aead6
      public void a(NBTTagCompound nbttagcompound) {
          super.a(nbttagcompound);
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index a82a78278b16088caa7e33449035e4023bfd92b7..07b0542add5d4df514a9f90a6ec6116d0000d01f 100644
+index a82a78278b16088caa7e33449035e4023bfd92b7..034ad3c6a921afd4f7a4cd5702da64e9e0d737dc 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
 @@ -583,7 +583,7 @@ public abstract class PlayerList {
@@ -78,22 +78,21 @@ index a82a78278b16088caa7e33449035e4023bfd92b7..07b0542add5d4df514a9f90a6ec6116d
                  location = new Location(cworld, blockposition.getX() + 0.5, blockposition.getY(), blockposition.getZ() + 0.5);
              }
  
-@@ -678,9 +678,12 @@ public abstract class PlayerList {
-         if (exitWorld != null) {
-             if ((cause == TeleportCause.END_PORTAL) && (i == 0)) {
+@@ -680,7 +680,12 @@ public abstract class PlayerList {
                  // THE_END -> NORMAL; use bed if available, otherwise default spawn
--                exit = ((org.bukkit.craftbukkit.entity.CraftPlayer) entityplayer.getBukkitEntity()).getBedSpawnLocation();
-+                exit = ((org.bukkit.craftbukkit.entity.CraftPlayer) entityplayer.getBukkitEntity()).getBedSpawnLocation().add(0.5, 0.10000000149011612, 0.5); // DashSpigot - Fix bed location
+                 exit = ((org.bukkit.craftbukkit.entity.CraftPlayer) entityplayer.getBukkitEntity()).getBedSpawnLocation();
                  if (exit == null || ((CraftWorld) exit.getWorld()).getHandle().dimension != 0) {
 -                    exit = exitWorld.getWorld().getSpawnLocation();
-+                    // DashSpigot start - Randomize spawn position
++                // DashSpigot start - Randomize spawn position & fix bed position
 +                    BlockPosition randomSpawn = entityplayer.getSpawnPoint(this.server, exitWorld);
 +                    exit = new Location(exitWorld.getWorld(), randomSpawn.getX(), randomSpawn.getY(), randomSpawn.getZ());
-+                    // DashSpigot end
++                } else {
++                    exit.add(0.5, 0.10000000149011612, 0.5);
++                // DashSpigot end
                  }
              } else {
                  // NORMAL <-> NETHER or NORMAL -> THE_END
-@@ -718,7 +721,7 @@ public abstract class PlayerList {
+@@ -718,7 +723,7 @@ public abstract class PlayerList {
          exitWorld.getTravelAgent().adjustExit(entityplayer, exit, velocity);
          exitWorld.chunkProviderServer.forceChunkLoad = before;
  

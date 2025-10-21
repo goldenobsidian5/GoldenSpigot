@@ -66,7 +66,7 @@ index d981c89fd182bae75c928616edc5944f6ee860f8..1fc6a652ae5c53594f1528b9860aead6
      public void a(NBTTagCompound nbttagcompound) {
          super.a(nbttagcompound);
 diff --git a/src/main/java/net/minecraft/server/PlayerList.java b/src/main/java/net/minecraft/server/PlayerList.java
-index a82a78278b16088caa7e33449035e4023bfd92b7..2e9af960576db3be9bc0716baa1099b948b2fd11 100644
+index a82a78278b16088caa7e33449035e4023bfd92b7..43727f1daf262fb1e5ae1825ab0d5e6737b609b3 100644
 --- a/src/main/java/net/minecraft/server/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/PlayerList.java
 @@ -583,7 +583,7 @@ public abstract class PlayerList {
@@ -101,3 +101,12 @@ index a82a78278b16088caa7e33449035e4023bfd92b7..2e9af960576db3be9bc0716baa1099b9
          // DashSpigot start - Fix MC-233: Portal travel sound doesn't play
          if (cause == TeleportCause.NETHER_PORTAL) {
              entityplayer.playerConnection.sendPacket(new PacketPlayOutNamedSoundEffect("portal.travel", entityplayer.locX, entityplayer.locY, entityplayer.locZ, 0.25F, entityplayer.random.nextFloat() * 0.4F + 0.8F));
+@@ -779,7 +784,7 @@ public abstract class PlayerList {
+             if (i == 1) {
+                 // use default NORMAL world spawn instead of target
+                 worldserver1 = this.server.worlds.get(0);
+-                blockposition = worldserver1.getSpawn();
++                blockposition = worldserver1.getHighestBlockYAt(worldserver1.getSpawn()).up(); // DashSpigot - Fix entity THE_END -> NORMAL location
+             } else {
+                 blockposition = worldserver1.getDimensionSpawn();
+             }
